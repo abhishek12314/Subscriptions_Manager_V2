@@ -1,15 +1,11 @@
 <?php
 session_start();
 include 'db.php';
-
-// Check if user is logged in
 $user_id = $_SESSION['user_id'] ?? null;
 if (!$user_id) {
     header('Location: login.php');
     exit;
 }
-
-// ✅ Handle profile update
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     $name = $_POST['name'] ?? '';
     $email = $_POST['email'] ?? '';
@@ -21,8 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_profile'])) {
     header("Location: profile.php?updated=1");
     exit;
 }
-
-// ✅ Handle email reminder toggle
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_reminders'])) {
     $enabled = isset($_POST['reminders']) ? 1 : 0;
 
@@ -32,18 +26,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['toggle_reminders'])) 
     echo json_encode(["status" => "success", "enabled" => $enabled]);
     exit;
 }
-
-// ✅ Fetch user info
 $stmt = $pdo->prepare("SELECT name, email, mobile, email_reminders FROM users WHERE id = ?");
 $stmt->execute([$user_id]);
 $user = $stmt->fetch();
-
-// ✅ Fetch total subscriptions
 $stmt2 = $pdo->prepare("SELECT COUNT(*) as total FROM subscriptions WHERE user_id = ?");
 $stmt2->execute([$user_id]);
 $total_subscriptions = $stmt2->fetch()['total'];
-
-// Check if edit mode is active
 $editMode = isset($_GET['edit']);
 ?>
 <!DOCTYPE html>
@@ -111,7 +99,6 @@ $editMode = isset($_GET['edit']);
 
       <div class="profile-card">
         <?php if ($editMode): ?>
-          <!-- ✅ Edit Form -->
           <form method="POST">
             <input type="hidden" name="update_profile" value="1">
 
@@ -128,7 +115,6 @@ $editMode = isset($_GET['edit']);
             <a href="profile.php">Cancel</a>
           </form>
         <?php else: ?>
-          <!-- ✅ Read-only Profile -->
           <h2><?php echo htmlspecialchars($user['name'] ?? ''); ?></h2>
           <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email'] ?? ''); ?></p>
           <p><strong>Mobile:</strong> <?php echo htmlspecialchars($user['mobile'] ?? 'Not set'); ?></p>
@@ -136,8 +122,6 @@ $editMode = isset($_GET['edit']);
 
           <a href="profile.php?edit=1" class="btn">Edit Profile</a>
         <?php endif; ?>
-
-        <!-- ✅ Email Reminders -->
         <section class="settings-section">
           <h2>Email Reminders</h2>
           <label class="switch">
@@ -146,8 +130,6 @@ $editMode = isset($_GET['edit']);
           </label>
           <span id="reminderStatus"><?= $user['email_reminders'] ? 'Enabled' : 'Disabled'; ?></span>
         </section>
-
-        <!-- Logout -->
         <section class="settings-section">
           <button id="logoutBtn" class="btn-logout" onclick="location.href='logout.php'">Log Out</button>
         </section>
@@ -160,7 +142,6 @@ $editMode = isset($_GET['edit']);
   </footer>
 
   <script>
-    // ✅ Theme toggle
     const themeToggle = document.getElementById('themeToggle');
     const body = document.body;
     themeToggle.addEventListener('click', () => {
@@ -170,8 +151,6 @@ $editMode = isset($_GET['edit']);
     });
     const savedTheme = localStorage.getItem('theme');
     if(savedTheme) body.className = savedTheme;
-
-    // ✅ Email reminder toggle
     const reminderToggle = document.getElementById('emailReminderToggle');
     const reminderStatus = document.getElementById('reminderStatus');
 
