@@ -4,7 +4,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
     header("Location: login.html");
     exit();
 }
-require_once "db.php"; // include your DB connection
+require_once "db.php";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -130,7 +130,6 @@ require_once "db.php"; // include your DB connection
 <footer class="footer"><p>&copy; 2025 Subscription Manager</p></footer>
 
 <script>
-  // You can feed analytics data via PHP -> JS (json_encode)
   const subsData = <?= json_encode($rows) ?>;
 
   let active=0, expired=0, monthly={};
