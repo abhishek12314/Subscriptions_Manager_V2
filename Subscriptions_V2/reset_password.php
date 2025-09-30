@@ -16,8 +16,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $user_id = $_SESSION['reset_user_id'];
             $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
             $stmt->execute([$new_password, $user_id]);
-
-            // Clear OTP session
             unset($_SESSION['otp'], $_SESSION['otp_expiry'], $_SESSION['reset_user_id']);
 
             echo "Password reset successful. <a href='login.html'>Login</a>";
