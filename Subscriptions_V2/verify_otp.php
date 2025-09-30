@@ -5,15 +5,11 @@ require 'db.php';
 if($_SERVER['REQUEST_METHOD'] === 'POST'){
     $otp_input = trim($_POST['otp']);
     $new_password = trim($_POST['new_password']);
-
-    // Validate OTP
     if(!isset($_SESSION['otp']) || !isset($_SESSION['otp_mobile'])){
         $_SESSION['otp_error'] = "No OTP session found. Try again.";
         header("Location: forgot_password.php");
         exit;
     }
-
-    // Optional: OTP expiry (5 minutes)
     if(time() - $_SESSION['otp_time'] > 300){
         unset($_SESSION['otp']);
         unset($_SESSION['otp_mobile']);
@@ -27,8 +23,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         header("Location: verify_otp.php");
         exit;
     }
-
-    // OTP is correct → update password
     $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
 
     $stmt = $pdo->prepare("UPDATE users SET password = :pwd WHERE mobile = :mobile");
@@ -36,8 +30,6 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         'pwd' => $hashed_password,
         'mobile' => $_SESSION['otp_mobile']
     ]);
-
-    // Clear OTP session
     unset($_SESSION['otp']);
     unset($_SESSION['otp_mobile']);
     unset($_SESSION['otp_time']);
