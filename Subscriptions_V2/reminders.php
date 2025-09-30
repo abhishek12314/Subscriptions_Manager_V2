@@ -1,11 +1,9 @@
 <?php
-require 'vendor/autoload.php'; // PHPMailer via Composer
-require 'db.php'; // your database connection
+require 'vendor/autoload.php';
+require 'db.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception;
-
-// 1. Get subscriptions with billing_date within next 3 days
 $stmt = $pdo->prepare("
     SELECT s.id, s.service, s.billing_date, s.reminder_days, u.email, u.name
     FROM subscriptions s
@@ -15,27 +13,20 @@ $stmt = $pdo->prepare("
 ");
 $stmt->execute();
 $reminders = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-// 2. Send emails
 if ($reminders) {
     foreach ($reminders as $r) {
         $mail = new PHPMailer(true);
 
         try {
-            // Server settings
             $mail->isSMTP();
             $mail->Host       = 'smtp.gmail.com';
             $mail->SMTPAuth   = true;
             $mail->Username   = 'your_email@gmail.com';
-            $mail->Password   = 'your_app_password'; // use app password, not your Gmail password
+            $mail->Password   = 'your_app_password';
             $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
             $mail->Port       = 587;
-
-            // Recipients
             $mail->setFrom('your_email@gmail.com', 'Subscription Manager');
             $mail->addAddress($r['email'], $r['name']);
-
-            // Content
             $mail->isHTML(true);
             $mail->Subject = "Reminder: Upcoming payment for {$r['service']}";
             $mail->Body    = "
