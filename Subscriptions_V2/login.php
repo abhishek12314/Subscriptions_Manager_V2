@@ -7,7 +7,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $password = $_POST['password'];
 
     try {
-        // Check if user exists
         $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
         $stmt->execute([$email]);
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -25,13 +24,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
             exit();
         } else {
-            // Store error in session and redirect
             $_SESSION['login_error'] = "Invalid email or password.";
             header("Location: login.html?error=1");
             exit();
         }
     } catch (Exception $e) {
-        // Handle unexpected errors gracefully
         $_SESSION['login_error'] = "Something went wrong. Please try again.";
         header("Location: login.html?error=1");
         exit();
