@@ -8,7 +8,7 @@ if (!$user_id) { header("Location: login.php"); exit; }
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
     $file = $_FILES['csv_file']['tmp_name'];
     if (($handle = fopen($file, "r")) !== FALSE) {
-        fgetcsv($handle); // skip header
+        fgetcsv($handle);
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
             [$name, $price, $start_date, $end_date] = $data;
             $stmt = $pdo->prepare("INSERT INTO subscriptions (user_id, name, price, start_date, end_date) VALUES (?, ?, ?, ?, ?)");
