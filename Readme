@@ -90,7 +90,7 @@ Dependencies
 -   PHP 8+
 -   MySQL
 -   PHPMailer (for sending emails)
--   cURL (for currency conversion API requests)
+-   CURL (for currency conversion API requests)
 
 ------------------------------------------------------------------------
 
