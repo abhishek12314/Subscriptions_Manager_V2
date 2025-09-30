@@ -1,15 +1,11 @@
 <?php
 session_start();
 include 'db.php';
-
-// Check login
 $user_id = $_SESSION['user_id'] ?? null;
 if (!$user_id) {
     header("Location: login.php");
     exit;
 }
-
-// Handle new reminder
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subscription_name'], $_POST['end_date'])) {
     $subscription_name = $_POST['subscription_name'];
     $end_date = $_POST['end_date'];
@@ -21,8 +17,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['subscription_name'], 
     header("Location: settings.php?saved=1");
     exit;
 }
-
-// Fetch reminders for display
 $stmt = $pdo->prepare("SELECT * FROM reminders WHERE user_id = ? ORDER BY end_date ASC");
 $stmt->execute([$user_id]);
 $reminders = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -53,8 +47,6 @@ $reminders = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php if (isset($_GET['saved'])): ?>
       <p style="color:green;">✅ Reminder saved!</p>
     <?php endif; ?>
-
-    <!-- Create Reminder -->
     <section class="settings-section">
       <h2>Create Reminder</h2>
       <form method="POST">
@@ -70,8 +62,6 @@ $reminders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <button type="submit">Save Reminder</button>
       </form>
     </section>
-
-    <!-- Show Reminders -->
     <section class="settings-section">
       <h2>My Reminders</h2>
       <?php if ($reminders): ?>
@@ -93,8 +83,6 @@ $reminders = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <p>No reminders yet.</p>
       <?php endif; ?>
     </section>
-
-    <!-- Email Reminders Switch -->
     <section class="settings-section">
       <h2>Email Reminders</h2>
       <label class="switch">
@@ -103,8 +91,6 @@ $reminders = $stmt->fetchAll(PDO::FETCH_ASSOC);
       </label>
       <span id="reminderStatus">Enabled</span>
     </section>
-
-    <!-- Logout -->
     <section class="settings-section">
       <a href="logout.php"><button class="btn-logout">Log Out</button></a>
     </section>
@@ -116,7 +102,6 @@ $reminders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </footer>
 
 <script>
-  // Theme toggle
   const themeToggle = document.getElementById('themeToggle');
   const body = document.body;
   themeToggle.addEventListener('click', () => {
@@ -126,8 +111,6 @@ $reminders = $stmt->fetchAll(PDO::FETCH_ASSOC);
   });
   const savedTheme = localStorage.getItem('theme');
   if(savedTheme) body.className = savedTheme;
-
-  // Email reminder switch
   const emailToggle = document.getElementById('emailReminderToggle');
   const reminderStatus = document.getElementById('reminderStatus');
   emailToggle.addEventListener('change', () => {
