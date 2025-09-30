@@ -1,7 +1,6 @@
 <?php
-// search_api.php
 session_start();
-require 'db.php'; // PDO connection
+require 'db.php';
 
 if (!isset($_SESSION['user_id'])) {
     echo json_encode(['success' => false, 'error' => 'Unauthorized']);
