@@ -1,8 +1,7 @@
 <?php 
 session_start(); 
-require 'db.php'; // make sure this connects to your DB
+require 'db.php'; 
 
-// Step 2: Handle OTP verification and password reset
 if (isset($_POST['verify_otp'])) {
     $otp = $_POST['otp'];
     $new_password = $_POST['new_password'];
@@ -93,14 +92,12 @@ if (isset($_POST['verify_otp'])) {
     <?php endif; ?>
 
     <?php if (!isset($_SESSION['reset_mobile'])): ?>
-      <!-- Step 1: Send OTP -->
       <p>Enter your registered mobile number to receive an OTP.</p>
       <form action="send_otp.php" method="POST" class="register-form">
         <input type="text" name="mobile" placeholder="Enter Mobile Number" required>
         <button type="submit">Send OTP</button>
       </form>
     <?php else: ?>
-      <!-- Step 2: Verify OTP and Reset Password -->
       <p>Enter the OTP sent to your mobile and choose a new password.</p>
       <form action="" method="POST" class="register-form">
         <input type="text" name="otp" placeholder="Enter OTP" required>
