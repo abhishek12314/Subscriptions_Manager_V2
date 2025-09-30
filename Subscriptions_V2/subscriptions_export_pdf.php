@@ -1,12 +1,10 @@
 <?php
 session_start();
-require('fpdf/fpdf.php'); // make sure fpdf is installed in your project
+require('fpdf/fpdf.php');
 include 'db.php';
 
 $user_id = $_SESSION['user_id'] ?? null;
 if (!$user_id) { header("Location: login.php"); exit; }
-
-// Fetch subscriptions
 $stmt = $pdo->prepare("SELECT name, price, start_date, end_date FROM subscriptions WHERE user_id = ?");
 $stmt->execute([$user_id]);
 $subscriptions = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -34,6 +32,6 @@ foreach ($subscriptions as $sub) {
     $pdf->Ln();
 }
 
-$pdf->Output('D', 'subscriptions.pdf'); // D = download
+$pdf->Output('D', 'subscriptions.pdf');
 exit;
 ?>
