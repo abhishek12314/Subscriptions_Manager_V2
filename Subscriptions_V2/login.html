@@ -26,7 +26,6 @@
   </style>
 </head>
 <script>
-  // Apply saved theme on page load
   document.addEventListener("DOMContentLoaded", function () {
     const savedTheme = localStorage.getItem("theme") || "light";
     document.body.classList.add(savedTheme);
@@ -36,8 +35,6 @@
       toggleBtn.addEventListener("click", function () {
         document.body.classList.toggle("dark");
         document.body.classList.toggle("light");
-
-        // Save theme choice
         const newTheme = document.body.classList.contains("dark") ? "dark" : "light";
         localStorage.setItem("theme", newTheme);
       });
@@ -46,7 +43,6 @@
 </script>
 
 <body>
-  <!-- Navbar -->
   <header class="navbar">
     <div class="logo">🔔 Subscription Management System</div>
     <nav>
@@ -54,19 +50,13 @@
       <button id="themeToggle">🌓</button>
     </nav>
   </header>
-
-  <!-- Hero Section with Form -->
   <section class="hero">
     <div class="overlay"></div>
     <div class="form-container">
       <h1>Login</h1>
-
-      <!-- Success Message -->
       <div id="successMsg" class="alert alert-success" style="display:none;">
         ✅ Registration successful! Please login.
       </div>
-
-      <!-- Error Message -->
       <div id="errorMsg" class="alert alert-error" style="display:none;">
         ❌ Invalid email or password. Please try again.
       </div>
@@ -89,7 +79,6 @@
   </footer>
 
   <script>
-    // Check if ?registered=1 is in the URL
     const urlParams = new URLSearchParams(window.location.search);
     if (urlParams.has('registered')) {
       document.getElementById('successMsg').style.display = 'block';
